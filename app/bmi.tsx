@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Alert,
   Image,
   Keyboard,
   StyleSheet,
@@ -10,6 +11,45 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 
 export default function Bmi() {
+  const [weight, setWeight] = React.useState("");
+  const [height, setHeight] = React.useState("");
+  const [result, setResult] = React.useState("0.00");
+  const [resultText, setResultText] = React.useState("การแปลผล");
+
+  const handleResetPress = () => {
+    setWeight("");
+    setHeight("");
+    setResult("0.00");
+    setResultText("การแปลผล");
+  };
+
+  const handleCalculatePress = () => {
+    Keyboard.dismiss();
+    if (weight.length == 0 || height.length == 0) {
+      Alert.alert("คำเตือน", "กรุณาป้อนน้ำหนักและส่วนสูง");
+      return;
+    }
+    if (weight == "0" || height == "0") {
+      Alert.alert("คำเตือน", "น้ำหนักและส่วนสูงต้องไม่เป็นศูนย์");
+      return;
+    }
+
+    let heightValue = parseFloat(height) / 100;
+    let weightValue = parseFloat(weight);
+    let bmi = weightValue / (heightValue * heightValue);
+    setResult(bmi.toFixed(2));
+
+    if (bmi < 18.5) {
+      setResultText("น้ำหนักต่ำกว่าเกณฑ์");
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      setResultText("น้ำหนักปกติ");
+    } else if (bmi >= 25 && bmi < 29.9) {
+      setResultText("น้ำหนักเกิน");
+    } else {
+      setResultText("โรคอ้วน");
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -18,26 +58,43 @@ export default function Bmi() {
           style={styles.imglogo}
         />
         <View style={styles.cardInput}>
-          <text style={styles.labelInput}>ป้อนน้ำหนัก(กิโลกรัม)</text>
-          <TextInput style={styles.textInput} keyboardType="numeric" />
-          <View style={{ height: 10 }} />
           <text style={styles.labelInput}>ป้อนส่วนสูง(เซนติเมตร)</text>
-          <TextInput style={styles.textInput} keyboardType="numeric" />
+          <TextInput
+            style={styles.textInput}
+            keyboardType="numeric"
+            value={height}
+            onChangeText={setHeight}
+          />
+          <View style={{ height: 10 }} />
+          <text style={styles.labelInput}>ป้อนน้ำหนัก(กิโลกรัม)</text>
+
+          <TextInput
+            style={styles.textInput}
+            keyboardType="numeric"
+            value={weight}
+            onChangeText={setWeight}
+          />
 
           <View style={{ flexDirection: "row", marginTop: 30 }}>
-            <TouchableOpacity style={styles.btnCalculate}>
+            <TouchableOpacity
+              style={styles.btnCalculate}
+              onPress={handleCalculatePress}
+            >
               <text style={{ color: "#c22431" }}>Calculate</text>
             </TouchableOpacity>
             <view style={{ width: 10 }} />
-            <TouchableOpacity style={styles.btnReset}>
+            <TouchableOpacity
+              style={styles.btnReset}
+              onPress={handleResetPress}
+            >
               <text style={{ color: "#c22431" }}>Reset</text>
             </TouchableOpacity>
             {/* Result */}
           </View>
           <View style={styles.cardResult}>
             <text>BMI</text>
-            <text>0.00</text>
-            <text>ผล</text>
+            <text>{result}</text>
+            <text>{resultText}</text>
           </View>
         </View>
       </View>
@@ -52,7 +109,7 @@ const styles = StyleSheet.create({
     color: "#c22431",
     fontSize: 20,
     fontWeight: "bold",
-    width: "80%",
+    width: "100%",
     marginTop: 50,
     alignItems: "center",
     backgroundColor: "#fff",
@@ -80,7 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#fff",
     shadowColor: "#be5e66",
-    shadowOffset: { width: 2, height: 4 },
+    shadowOffset: { width: 3, height: 4 },
   },
   imglogo: { width: 120, height: 120, marginTop: 40 }, //imglogo style
   container: {
@@ -91,7 +148,7 @@ const styles = StyleSheet.create({
   cardInput: {
     //cardInput style
     backgroundColor: "#c22431",
-    width: "100%",
+    width: "80%",
     marginTop: 20,
     padding: 20,
     borderRadius: 10,
