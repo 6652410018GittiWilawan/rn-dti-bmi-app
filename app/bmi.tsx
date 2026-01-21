@@ -23,6 +23,7 @@ export default function Bmi() {
           <View style={{ height: 10 }} />
           <text style={styles.labelInput}>ป้อนส่วนสูง(เซนติเมตร)</text>
           <TextInput style={styles.textInput} keyboardType="numeric" />
+
           <View style={{ flexDirection: "row", marginTop: 30 }}>
             <TouchableOpacity style={styles.btnCalculate}>
               <text style={{ color: "#c22431" }}>Calculate</text>
@@ -31,8 +32,8 @@ export default function Bmi() {
             <TouchableOpacity style={styles.btnReset}>
               <text style={{ color: "#c22431" }}>Reset</text>
             </TouchableOpacity>
-          </View>{" "}
-          //Result
+            {/* Result */}
+          </View>
           <View style={styles.cardResult}>
             <text>BMI</text>
             <text>0.00</text>
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   cardInput: {
     //cardInput style
     backgroundColor: "#c22431",
-    width: "90%",
+    width: "100%",
     marginTop: 20,
     padding: 20,
     borderRadius: 10,
